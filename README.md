@@ -16,6 +16,8 @@
 
 - 用户注册与登录
 - 论坛（BBS）、代码分享、文章发布
+- 文章评论、浏览量、标签云、分类筛选
+- 友情链接管理
 - 自定义页面、RSS 订阅
 - 主题切换、Aero 玻璃特效、自定义 CSS
 - 搜索、API、小游戏
@@ -78,3 +80,13 @@ python main.py          # 启动（未安装将自动进入安装向导）
 
 - `config/config.ini`：数据库、站点、安全（从 config.ini.sample 复制）
 - `config/settings.py`：Django 主配置，自动读取 config.ini
+
+## 开源发布包
+
+构建不含敏感信息的开源发布包：
+
+```bash
+python scripts/build_opensource.py
+```
+
+生成 `open_source/` 目录，包含：源代码、模板、静态资源、文档、LICENSE、config.ini.sample 等。已排除：config.ini、installed.lock、*.db、venv、用户上传等。
