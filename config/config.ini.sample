@@ -1,0 +1,47 @@
+; VaelorCMS 站点配置示例
+; 复制为 config.ini 并填写实际值，或通过 Web 安装向导完成
+; 详见 docs/DEPLOYMENT.md
+
+[database]
+host = 127.0.0.1
+port = 3306
+dbname = vaelor_cms
+username = vaelor_user
+password = your_password
+charset = utf8mb4
+
+[site]
+name = VaelorCMS
+base_url = /
+session_name = VAELOR_SESS
+cookie_path = /
+; HTTPS 反向代理部署时必填，逗号分隔，详见 docs/CONFIG.md
+trusted_origins =
+
+[security]
+login_max_attempts = 5
+login_lockout_minutes = 15
+force_https = 0
+
+[limits]
+list_limit = 100
+bbs_content_max = 50000
+code_snippet_max = 100000
+
+[pagination]
+per_page = 20
+
+[cache]
+; redis=Redis 缓存，留空或非 redis=LocMem
+driver = redis
+host = 127.0.0.1
+port = 6379
+prefix = vaelor_
+; password 留空则无密码；或设 REDIS_PASSWORD 环境变量
+password =
+
+[performance]
+; 静态资源缓存（秒），0=不设置
+static_cache_seconds = 2592000
+; 开启 Gzip 压缩（需服务器支持）
+gzip = 1
