@@ -1,0 +1,8 @@
+/* VaelorCMS 主题 - 模块化架构 */
+/* 变量 → 基础 → Aero → 布局 → 组件 → 管理/工具 */
+@import url('css/_variables.css');
+@import url('css/_base.css');
+@import url('css/_aero.css');
+@import url('css/_layout.css');
+@import url('css/_components.css');
+@import url('css/_admin.css');

@@ -1,0 +1,21 @@
+/* 变量模块 - 可被主题/定制覆盖 */
+:root {
+  --fg: #2a2520;
+  --fg-muted: #6b635c;
+  --bg: #f6f3ef;
+  --bg-card: #fefcf8;
+  --border: #ddd8d0;
+  --accent: #8b5a2b;
+  --accent-hover: #a07040;
+  --danger: #a63d3d;
+  --ok: #4a6b4a;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --font: 'Noto Serif SC', 'Source Serif 4', Georgia, 'Songti SC', serif;
+  /* Aero 玻璃 - 由定制或 body.aero 覆盖 */
+  --aero-blur: 12px;
+  --aero-opacity: 0.85;
+  --aero-bg: rgba(254, 252, 248, 0.85);
+  --aero-border: rgba(221, 216, 208, 0.6);
+  --aero-shadow: 0 8px 32px rgba(42, 37, 32, 0.08);
+}

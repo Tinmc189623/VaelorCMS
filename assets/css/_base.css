@@ -1,0 +1,24 @@
+/* 基础模块 - 重置、字体、body */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 16px; scroll-behavior: smooth; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font);
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f8f5f0 0%, #ebe6df 50%, #e8e2da 100%);
+  background-attachment: fixed;
+  color: var(--fg);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
