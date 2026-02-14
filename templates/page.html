@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<article class="card">
+<div class="card-title">{{ page.title }}</div>
+<div class="card-body page-content">
+{% if page.content_is_html %}{{ content_safe }}{% else %}<div style="white-space:pre-wrap;">{{ page.content|linebreaks }}</div>{% endif %}
+</div>
+</article>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}帮助{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">帮助</div>
+<div class="card-body">
+<p style="color:var(--fg-muted);margin-bottom:1.5rem;">第一次用？别紧张，跟着下面一步步来就行。更多问题请查看 <a href="{% url 'faq' %}">FAQ</a>。</p>
+<h3 style="margin-top:0;">快速入门</h3>
+<h4>如何注册？</h4>
+<p>点顶栏的「注册」，填用户名、密码（再确认一遍）、邮箱（可选），提交即可。如果看不到注册入口，说明站长关了注册，需要找管理员开账号。</p>
+<h4>如何发帖？</h4>
+<p>登录后点「论坛」→「发帖」，填标题和内容，提交就行。帖子最多几万字，具体看站长配置。</p>
+<h4>如何提交代码？</h4>
+<p>登录后点「代码」→「提交代码」，填标题、选语言、贴代码，提交。别人能看到带高亮的代码。</p>
+<h4>如何写文章？</h4>
+<p>登录后点「文章」→「发布文章」，填标题和内容，选「草稿」或「已发布」。草稿只有你自己能看到。</p>
+<h4>忘记密码？</h4>
+<p>目前需要联系管理员重置。改完密码后需要重新登录。</p>
+<h4>如何改个人资料？</h4>
+<p>登录后点「用户中心」→「设置」，可以改昵称、简介、头像、隐私、通知偏好等。还能在这里修改密码、登出其他设备。</p>
+<h4>限制说明</h4>
+<p>帖子最多 50000 字，代码最多 100000 字。连续登录失败 5 次将锁定 15 分钟（具体以站长配置为准）。</p>
+<h3 style="margin-top:2rem;">更多文档</h3>
+<p>详细说明请看项目 <code>docs/</code> 目录：<strong>USER_GUIDE.md</strong>（用户指南）、<strong>GETTING_STARTED.md</strong>（快速上手）、<strong>ADMIN_GUIDE.md</strong>（管理员指南）。</p>
+</div>
+</div>
+{% endblock %}

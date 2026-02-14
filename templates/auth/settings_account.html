@@ -1,0 +1,11 @@
+{% extends 'auth/settings_base.html' %}
+{% block title %}账户与安全 - 设置{% endblock %}
+{% block settings_content %}
+<h3 style="margin-top:0;">账户与安全</h3>
+<h4>会话管理</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);">当前设备已登录。若怀疑账号泄露，可登出其他设备。</p>
+<form method="post" action="{% url 'settings_logout_others' %}" style="margin-top:1rem;">
+{% csrf_token %}
+<button type="submit" class="btn">登出其他设备</button>
+</form>
+{% endblock %}

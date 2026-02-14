@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}代码分享{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">代码分享</div>
+<div class="card-body">
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'code_submit' %}" style="margin-bottom:1.5rem;">
+{% csrf_token %}
+<div class="input-group"><label>标题</label><input type="text" name="title" required maxlength="255"></div>
+<div class="input-group"><label>语言</label><input type="text" name="language" value="text" placeholder="text/python/javascript"></div>
+<div class="input-group"><label>代码</label><textarea name="code" rows="12" style="font-family:monospace;"></textarea></div>
+<button type="submit" class="btn">提交</button>
+</form>
+{% else %}
+<p>请先 <a href="{% url 'login' %}">登录</a> 后提交代码。</p>
+{% endif %}
+<div style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
+{% for s in items %}
+<a href="{% url 'code_detail' s.pk %}" class="list-item">
+<span class="title">{{ s.title }}</span>
+<span class="meta">{{ s.language }} · {{ s.user.username|default:"匿名" }} · {{ s.created_at|date:"Y-m-d H:i" }}</span>
+</a>
+{% empty %}
+<p style="padding:1.5rem;color:var(--fg-muted);">暂无代码</p>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

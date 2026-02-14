@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}用户管理{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">用户管理</div>
+<div class="card-body">
+<div class="admin-table-wrap">
+<div class="admin-row users head"><span>ID</span><span>用户名</span><span>邮箱</span><span>角色</span><span>注册时间</span></div>
+{% for u in users %}
+<div class="admin-row users"><span>{{ u.id }}</span><span>{{ u.username }}</span><span>{{ u.email }}</span><span>{{ u.role }}</span><span>{{ u.created_at|date:"Y-m-d H:i" }}</span></div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}设置{% endblock %}
+{% block content %}
+<div class="card" style="max-width:900px;">
+<div class="card-title">用户设置</div>
+<div class="card-body" style="display:flex;gap:2rem;flex-wrap:wrap;">
+<nav style="min-width:180px;border-right:1px solid var(--border);padding-right:1.5rem;">
+<a href="{% url 'settings_profile' %}" class="list-item" style="border:none;padding:0.5rem 0;{% if request.resolver_match.url_name == 'settings_profile' %}font-weight:600;color:var(--accent);{% endif %}">资料</a>
+<a href="{% url 'settings_password' %}" class="list-item" style="border:none;padding:0.5rem 0;{% if request.resolver_match.url_name == 'settings_password' %}font-weight:600;color:var(--accent);{% endif %}">修改密码</a>
+<a href="{% url 'settings_account' %}" class="list-item" style="border:none;padding:0.5rem 0;{% if request.resolver_match.url_name == 'settings_account' %}font-weight:600;color:var(--accent);{% endif %}">账户与安全</a>
+</nav>
+<div style="flex:1;min-width:280px;">
+{% block settings_content %}{% endblock %}
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}论坛{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">论坛</div>
+<div class="card-body">
+{% if can_post %}
+<form method="post" action="{% url 'bbs_post' %}" class="bbs-post-form">
+{% csrf_token %}
+<div class="input-group"><label>标题</label><input type="text" name="title" required maxlength="255"></div>
+<div class="input-group"><label>内容</label><textarea name="content" rows="6"></textarea></div>
+<button type="submit" class="btn">发表</button>
+</form>
+{% if not user.is_authenticated %}<p style="font-size:0.875rem;color:var(--fg-muted);">游客发帖将显示为匿名</p>{% endif %}
+{% else %}
+<p>请先 <a href="{% url 'login' %}">登录</a> 后发帖。</p>
+{% endif %}
+<div class="list-wrap">
+{% for p in posts %}
+<a href="{% url 'bbs_detail' p.pk %}" class="list-item">
+<span class="title">{{ p.title }}</span>
+<span class="meta">{{ p.user.username|default:"匿名" }} · {{ p.created_at|date:"Y-m-d H:i" }}</span>
+</a>
+{% empty %}
+<p style="padding:1.5rem;color:var(--fg-muted);">暂无帖子</p>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

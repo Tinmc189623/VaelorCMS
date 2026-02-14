@@ -1,0 +1,24 @@
+{% extends 'install/base_install.html' %}
+{% block title %}许可协议{% endblock %}
+{% block content %}
+<p>欢迎使用 VaelorCMS 安装向导。VaelorCMS 是介于轻量与重量级之间的开源 CMS。请阅读以下许可协议：</p>
+<div style="background:var(--bg); padding:1rem; border-radius:var(--radius-sm); max-height:200px; overflow-y:auto; margin:1rem 0; font-size:0.9rem;">
+<p><strong>GNU Affero General Public License v3.0 (AGPL 3.0)</strong></p>
+<p>VaelorCMS 为开源软件，采用 AGPL 3.0 许可证。</p>
+<p>1. 您可自由使用、修改、分发本软件。</p>
+<p>2. 基于本软件提供的网络服务，其修改后的源代码也须以 AGPL 3.0 开源。</p>
+<p>3. 本软件按「原样」提供，不提供任何明示或暗示的保证。</p>
+<p>4. 安装即表示您同意遵守 AGPL 3.0 条款。</p>
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">AGPL 3.0 全文</a></p>
+</div>
+{% if messages %}
+{% for m in messages %}
+<div class="alert-error">{{ m }}</div>
+{% endfor %}
+{% endif %}
+<form method="post">
+{% csrf_token %}
+<label><input type="checkbox" name="agree" value="1" required> 我已阅读并同意许可协议</label>
+<p style="margin-top:1rem;"><button type="submit" class="btn">下一步</button></p>
+</form>
+{% endblock %}

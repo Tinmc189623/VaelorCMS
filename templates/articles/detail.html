@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load site_extras static %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block head_extra %}
+<style>.read-progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:9999;transition:width .1s}</style>
+{% endblock %}
+{% block content %}
+<div class="read-progress" id="read-progress" style="width:0%"></div>
+<script>
+(function(){var p=document.getElementById('read-progress'),t;window.addEventListener('scroll',function(){if(t)return;t=requestAnimationFrame(function(){var h=document.documentElement.scrollHeight-innerHeight;p.style.width=h<=0?'0':(scrollY/h*100)+'%';t=null});},{passive:true});})();
+</script>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1rem;"><a href="{% url 'articles_index' %}">文章</a> &rsaquo; {{ article.title }}</p>
+<article class="card" itemscope itemtype="https://schema.org/Article">
+<div class="card-title" itemprop="headline">{{ article.title }}{% if article.is_pinned %}<span style="font-size:0.75rem;color:var(--accent);margin-left:0.5rem;">置顶</span>{% endif %}</div>
+<div class="card-body">
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1rem;">
+<time datetime="{{ article.created_at|date:'c' }}" itemprop="datePublished">{{ article.created_at|date:"Y-m-d H:i" }}</time>
+{% if article.updated_at %} · 更新于 <time datetime="{{ article.updated_at|date:'c' }}" itemprop="dateModified">{{ article.updated_at|date:"Y-m-d H:i" }}</time>{% endif %}
+{% if article.content %} · 约 {{ article.content|reading_time }} 分钟阅读{% endif %}
+{% if article.view_count %} · {{ article.view_count }} 阅读{% endif %}
+{% if article.like_count %} · {{ article.like_count }} 点赞{% endif %}
+</p>
+{% if article.category or article.tags %}
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1rem;">
+{% if article.category %}分类：<a href="{% url 'articles_index' %}?category={{ article.category|urlencode }}">{{ article.category }}</a>{% endif %}
+{% if article.tags %} · 标签：{% for t in article.tags|split:"," %}<a href="{% url 'articles_index' %}?tag={{ t|urlencode }}">{{ t }}</a>{% if not forloop.last %}、{% endif %}{% endfor %}{% endif %}
+</p>
+{% endif %}
+<div style="white-space:pre-wrap;" itemprop="articleBody">{{ article.content|linebreaks }}</div>
+<p style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+<a href="{% url 'articles_index' %}" class="back-link"><img src="{% static 'icons/arrow-left.svg' %}" alt="" class="icon-inline"> 文章列表</a>
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'article_like' article.pk %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn" style="padding:0.35rem 0.75rem;font-size:0.875rem;">{% if liked %}取消{% endif %}点赞 ({{ article.like_count }})</button></form>
+<form method="post" action="{% url 'article_favorite' article.pk %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn" style="padding:0.35rem 0.75rem;font-size:0.875rem;">{% if favorited %}取消收藏{% else %}收藏{% endif %}</button></form>
+{% endif %}
+<span style="font-size:0.875rem;color:var(--fg-muted);">分享：</span>
+<a href="https://twitter.com/intent/tweet?text={{ article.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" style="font-size:0.875rem;">Twitter</a>
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" style="font-size:0.875rem;">Facebook</a>
+<a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener" style="font-size:0.875rem;">Telegram</a>
+</p>
+</div>
+</article>
+{% if show_comments %}
+<div class="card" style="margin-top:1.5rem;">
+<div class="card-title">评论 ({{ comments|length }})</div>
+<div class="card-body">
+{% for c in comments %}
+<div style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
+<p style="font-size:0.875rem;margin-bottom:0.25rem;"><strong>{% if c.user %}{{ c.user.username }}{% else %}{{ c.author_name|default:"游客" }}{% endif %}</strong> · {{ c.created_at|date:"Y-m-d H:i" }}</p>
+<p style="white-space:pre-wrap;">{{ c.content|linebreaks }}</p>
+{% for r in c.replies.all %}
+<div style="margin-left:1.5rem;padding:0.5rem 0;font-size:0.9rem;">
+<p style="margin-bottom:0.25rem;"><strong>{% if r.user %}{{ r.user.username }}{% else %}{{ r.author_name|default:"游客" }}{% endif %}</strong> · {{ r.created_at|date:"Y-m-d H:i" }}</p>
+<p style="white-space:pre-wrap;">{{ r.content|linebreaks }}</p>
+</div>
+{% endfor %}
+</div>
+{% empty %}
+<p style="color:var(--fg-muted);">暂无评论</p>
+{% endfor %}
+<form method="post" action="{% url 'article_add_comment' article.pk %}" style="margin-top:1rem;">
+{% csrf_token %}
+{% if not user.is_authenticated %}<input type="text" name="author_name" placeholder="昵称（可选）" style="width:200px;padding:0.35rem;margin-bottom:0.5rem;"><br>{% endif %}
+<textarea name="content" rows="3" placeholder="写下你的评论..." required style="width:100%;padding:0.5rem;"></textarea><br>
+<button type="submit" class="btn">发表评论</button>
+</form>
+</div>
+</div>
+{% endif %}
+{% endblock %}

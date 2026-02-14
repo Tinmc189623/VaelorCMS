@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}管理员设置{% endblock %}
+{% block content %}
+<div class="card" style="max-width:900px;">
+<div class="card-title">管理员设置</div>
+<div class="card-body">
+<nav style="display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+<a href="?tab=general" class="btn" style="{% if tab == 'general' %}background:var(--accent);color:white;{% endif %}">站点</a>
+<a href="?tab=security" class="btn" style="{% if tab == 'security' %}background:var(--accent);color:white;{% endif %}">安全</a>
+<a href="?tab=user" class="btn" style="{% if tab == 'user' %}background:var(--accent);color:white;{% endif %}">用户</a>
+<a href="?tab=content" class="btn" style="{% if tab == 'content' %}background:var(--accent);color:white;{% endif %}">内容</a>
+<a href="?tab=maintenance" class="btn" style="{% if tab == 'maintenance' %}background:var(--accent);color:white;{% endif %}">维护</a>
+<a href="?tab=theme" class="btn" style="{% if tab == 'theme' %}background:var(--accent);color:white;{% endif %}">主题</a>
+<a href="?tab=seo" class="btn" style="{% if tab == 'seo' %}background:var(--accent);color:white;{% endif %}">SEO</a>
+<a href="?tab=advanced" class="btn" style="{% if tab == 'advanced' %}background:var(--accent);color:white;{% endif %}">高级</a>
+</nav>
+<form method="post" action="{% url 'admin_settings' %}?tab={{ tab }}">
+{% csrf_token %}
+<input type="hidden" name="tab" value="{{ tab }}">
+{% if tab == 'general' %}
+<h4>站点信息</h4>
+<div class="input-group"><label>站点名称</label><input type="text" name="site_name" value="{{ data.general.site_name }}"></div>
+<div class="input-group"><label>站点描述</label><input type="text" name="site_description" value="{{ data.general.site_description }}" placeholder="SEO 描述"></div>
+<div class="input-group"><label>关键词</label><input type="text" name="site_keywords" value="{{ data.general.site_keywords }}" placeholder="逗号分隔"></div>
+<div class="input-group"><label>时区</label><input type="text" name="timezone" value="{{ data.general.timezone }}"></div>
+<div class="input-group"><label>语言</label><input type="text" name="language" value="{{ data.general.language }}"></div>
+{% elif tab == 'security' %}
+<h4>登录与密码</h4>
+<div class="input-group"><label>登录失败上限</label><input type="number" name="login_max_attempts" value="{{ data.security.login_max_attempts }}" min="3" max="20"></div>
+<div class="input-group"><label>锁定时长（分钟）</label><input type="number" name="login_lockout_minutes" value="{{ data.security.login_lockout_minutes }}" min="5" max="1440"></div>
+<div class="input-group"><label>密码最小长度</label><input type="number" name="min_password_length" value="{{ data.security.min_password_length }}" min="6" max="32"></div>
+<div class="input-group"><label>强密码要求</label><select name="require_strong_password"><option value="0" {% if data.security.require_strong_password == '0' %}selected{% endif %}>否</option><option value="1" {% if data.security.require_strong_password == '1' %}selected{% endif %}>是（含字母与数字）</option></select></div>
+<div class="input-group"><label>密码须含特殊字符</label><select name="require_password_special"><option value="0" {% if data.security.require_password_special == '0' %}selected{% endif %}>否</option><option value="1" {% if data.security.require_password_special == '1' %}selected{% endif %}>是（如 !@#$%^&*）</option></select></div>
+<div class="input-group"><label>API 限流（次/分钟）</label><input type="number" name="api_rate_limit" value="{{ data.security.api_rate_limit|default:'60' }}" min="0" max="600" placeholder="0=不限"></div>
+<div class="input-group"><label>会话有效期（天）</label><input type="number" name="session_timeout_days" value="{{ data.security.session_timeout_days }}" min="1" max="90"></div>
+<div class="input-group"><label>强制 HTTPS</label><select name="force_https"><option value="0" {% if data.security.force_https == '0' %}selected{% endif %}>否</option><option value="1" {% if data.security.force_https == '1' %}selected{% endif %}>是</option></select></div>
+{% elif tab == 'user' %}
+<h4>用户注册</h4>
+<div class="input-group"><label>开放注册</label><select name="allow_register"><option value="1" {% if data.user.allow_register == '1' %}selected{% endif %}>是</option><option value="0" {% if data.user.allow_register == '0' %}selected{% endif %}>否</option></select></div>
+<div class="input-group"><label>需邮箱验证</label><select name="require_email_verify"><option value="0" {% if data.user.require_email_verify == '0' %}selected{% endif %}>否</option><option value="1" {% if data.user.require_email_verify == '1' %}selected{% endif %}>是</option></select></div>
+<div class="input-group"><label>默认角色</label><select name="default_user_role"><option value="user" {% if data.user.default_user_role == 'user' %}selected{% endif %}>user</option><option value="moderator" {% if data.user.default_user_role == 'moderator' %}selected{% endif %}>moderator</option></select></div>
+{% elif tab == 'content' %}
+<h4>内容与审核</h4>
+<div class="input-group"><label>论坛需审核</label><select name="bbs_moderation"><option value="0" {% if data.content.bbs_moderation == '0' %}selected{% endif %}>否</option><option value="1" {% if data.content.bbs_moderation == '1' %}selected{% endif %}>是</option></select></div>
+<div class="input-group"><label>游客可发帖</label><select name="bbs_guest_post"><option value="0" {% if data.content.bbs_guest_post == '0' %}selected{% endif %}>否</option><option value="1" {% if data.content.bbs_guest_post == '1' %}selected{% endif %}>是</option></select></div>
+<div class="input-group"><label>文章评论</label><select name="article_comment"><option value="0" {% if data.content.article_comment == '0' %}selected{% endif %}>关闭</option><option value="1" {% if data.content.article_comment == '1' %}selected{% endif %}>开启</option></select></div>
+{% elif tab == 'theme' %}
+<h4>主题与插件</h4>
+<div class="input-group"><label>主题</label><select name="theme">{% for t in themes %}<option value="{{ t.id }}" {% if data.theme.theme|default:"" == t.id %}selected{% endif %}>{{ t.name }}</option>{% endfor %}</select></div>
+<div class="input-group"><label>Aero 玻璃特效</label><select name="aero_enabled"><option value="1" {% if data.theme.aero_enabled == '1' %}selected{% endif %}>启用</option><option value="0" {% if data.theme.aero_enabled == '0' %}selected{% endif %}>关闭</option></select></div>
+<div class="input-group"><label>Aero 模糊强度（px）</label><input type="number" name="aero_blur" value="{{ data.theme.aero_blur|default:'16' }}" min="0" max="40"></div>
+<div class="input-group"><label>强调色覆盖</label><input type="text" name="accent_color" value="{{ data.theme.accent_color|default:'' }}" placeholder="如 #8b5a2b，留空用主题默认"></div>
+<div class="input-group"><label>自定义 CSS</label><textarea name="custom_css" rows="6" placeholder="注入到 head 的 CSS 片段">{{ data.theme.custom_css|default:'' }}</textarea></div>
+<div class="input-group"><label>暗色模式</label><select name="dark_mode"><option value="0" {% if data.theme.dark_mode|default:"0" == "0" %}selected{% endif %}>跟随系统</option><option value="1" {% if data.theme.dark_mode == "1" %}selected{% endif %}>暗色</option><option value="2" {% if data.theme.dark_mode == "2" %}selected{% endif %}>亮色</option></select></div>
+<div class="input-group"><label>已启用插件</label><input type="text" name="plugins_enabled" value="{{ data.theme.plugins_enabled|default:'' }}" placeholder="逗号分隔插件 ID，如 plugin_a,plugin_b"></div>
+{% elif tab == 'seo' %}
+<h4>SEO 设置</h4>
+<div class="input-group"><label>规范 URL 基础</label><input type="url" name="seo_canonical_base" value="{{ data.seo.seo_canonical_base|default:'' }}" placeholder="https://www.example.com"></div>
+<div class="input-group"><label>默认描述</label><textarea name="seo_default_description" rows="2">{{ data.seo.seo_default_description|default:'' }}</textarea></div>
+<div class="input-group"><label>默认关键词</label><input type="text" name="seo_default_keywords" value="{{ data.seo.seo_default_keywords|default:'' }}" placeholder="逗号分隔"></div>
+<div class="input-group"><label>OG 图片路径</label><input type="text" name="seo_og_image" value="{{ data.seo.seo_og_image|default:'' }}" placeholder="/static/og.png"></div>
+<div class="input-group"><label>Twitter Card</label><select name="seo_twitter_card"><option value="summary" {% if data.seo.seo_twitter_card|default:"summary" == "summary" %}selected{% endif %}>summary</option><option value="summary_large_image" {% if data.seo.seo_twitter_card == "summary_large_image" %}selected{% endif %}>summary_large_image</option></select></div>
+<div class="input-group"><label>标题后缀</label><input type="text" name="seo_title_suffix" value="{{ data.seo.seo_title_suffix|default:' - {site_name}' }}" placeholder=" - {site_name}"></div>
+{% elif tab == 'maintenance' %}
+<h4>维护模式</h4>
+<div class="input-group"><label>开启维护</label><select name="maintenance_mode"><option value="0" {% if data.maintenance.maintenance_mode == '0' %}selected{% endif %}>否</option><option value="1" {% if data.maintenance.maintenance_mode == '1' %}selected{% endif %}>是</option></select></div>
+<div class="input-group"><label>维护提示</label><textarea name="maintenance_message" rows="3">{{ data.maintenance.maintenance_message }}</textarea></div>
+{% elif tab == 'advanced' %}
+<h4>全部配置（键值对）</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1rem;">编辑或新增任意配置项，支持自定义键。键名仅限字母数字下划线。</p>
+<table style="width:100%;border-collapse:collapse;">
+<thead><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:0.5rem;">键</th><th style="text-align:left;padding:0.5rem;">值</th><th style="text-align:left;padding:0.5rem;">分类</th><th></th></tr></thead>
+<tbody>
+{% for item in advanced_items %}
+<tr style="border-bottom:1px solid var(--border);">
+<td style="padding:0.5rem;"><input type="text" name="adv_key_{{ item.id }}" value="{{ item.key }}" style="width:100%;max-width:200px;" pattern="[a-zA-Z0-9_]+" title="仅字母数字下划线"></td>
+<td style="padding:0.5rem;"><textarea name="adv_value_{{ item.id }}" rows="1" style="width:100%;min-height:2em;">{{ item.value }}</textarea></td>
+<td style="padding:0.5rem;"><input type="text" name="adv_cat_{{ item.id }}" value="{{ item.category }}" style="width:100px;"></td>
+<td style="padding:0.5rem;"><input type="checkbox" name="adv_del_{{ item.id }}" value="1" title="删除"></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div style="margin-top:1rem;">
+<h5 style="margin-bottom:0.5rem;">新增配置</h5>
+<input type="text" name="new_key" placeholder="键名" pattern="[a-zA-Z0-9_]+" style="width:150px;margin-right:0.5rem;">
+<input type="text" name="new_value" placeholder="值" style="width:250px;margin-right:0.5rem;">
+<input type="text" name="new_category" placeholder="分类" value="general" style="width:100px;">
+</div>
+{% endif %}
+<div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;">
+<button type="submit" class="btn">保存</button>
+{% if tab != 'advanced' %}<button type="submit" class="btn" name="action" value="restore" formnovalidate style="background:var(--fg-muted);" onclick="return confirm('确定将当前分类恢复为默认值？');">一键恢复当前分类</button>{% endif %}
+</div>
+</form>
+</div>
+</div>
+{% endblock %}

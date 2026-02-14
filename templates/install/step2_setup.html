@@ -1,0 +1,74 @@
+{% extends 'install/base_install.html' %}
+{% block title %}站点配置{% endblock %}
+{% block content %}
+<p>填写站点信息和管理员账号，无需修改任何配置文件。默认使用 SQLite，可选 MySQL。</p>
+<ul class="check-list">
+{% for name, value, ok in checks %}
+<li>
+  <span>{{ name }}</span>
+  <span class="{% if ok %}check-ok{% else %}check-fail{% endif %}">{{ value }}{% if ok %} ✓{% else %} ✗{% endif %}</span>
+</li>
+{% endfor %}
+</ul>
+{% if not all_ok %}
+<p class="alert-error">请先解决上述环境问题后再继续。</p>
+{% else %}
+{% if messages %}
+{% for m in messages %}
+<div class="alert-error">{{ m }}</div>
+{% endfor %}
+{% endif %}
+<form method="post">
+<div class="form-group">
+<label>站点名称</label>
+<input type="text" name="site_name" value="{{ site_name }}" placeholder="VaelorCMS">
+</div>
+<div class="form-group">
+<label>管理员用户名</label>
+<input type="text" name="admin_user" value="{{ admin_user }}" required>
+</div>
+<div class="form-group">
+<label>管理员密码</label>
+<input type="password" name="admin_pass" minlength="6" required>
+</div>
+<div class="form-group">
+<label>确认密码</label>
+<input type="password" name="admin_pass2" minlength="6" required>
+</div>
+<div class="form-group">
+<label><input type="checkbox" name="use_mysql" value="1" {% if use_mysql %}checked{% endif %} id="use-mysql"> 使用 MySQL（可选，默认 SQLite）</label>
+</div>
+<div id="mysql-fields" class="form-group" style="{% if not use_mysql %}display:none{% endif %}">
+<hr style="margin:1rem 0;">
+<p style="font-size:0.9rem; color:var(--fg-muted);">填写 MySQL 连接信息（请确保数据库已创建）：</p>
+<div class="form-group">
+<label>数据库主机</label>
+<input type="text" name="db_host" value="127.0.0.1">
+</div>
+<div class="form-group">
+<label>端口</label>
+<input type="text" name="db_port" value="3306">
+</div>
+<div class="form-group">
+<label>数据库名</label>
+<input type="text" name="db_name" placeholder="vaelor_cms">
+</div>
+<div class="form-group">
+<label>用户名</label>
+<input type="text" name="db_user">
+</div>
+<div class="form-group">
+<label>密码</label>
+<input type="password" name="db_pass">
+</div>
+</div>
+<p><button type="submit" class="btn">下一步：执行安装</button></p>
+{% csrf_token %}
+</form>
+<script>
+document.getElementById('use-mysql').onchange = function() {
+  document.getElementById('mysql-fields').style.display = this.checked ? 'block' : 'none';
+};
+</script>
+{% endif %}
+{% endblock %}

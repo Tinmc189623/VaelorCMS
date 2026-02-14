@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="index, follow">
+<title>{% block title %}{{ request.page_title|default:"首页" }}{% endblock %} - {{ site_name }}</title>
+{% if accent_color %}<style>:root{--accent:{{ accent_color }};--accent-hover:{{ accent_color }};}</style>{% endif %}
+{% if aero_enabled and aero_blur %}<style>:root{--aero-blur:{{ aero_blur }}px;}</style>{% endif %}
+<meta name="description" content="{% block meta_description %}{{ request.page_description|default:seo_description|default:site_description|default:site_name }}{% endblock %}">
+<meta name="keywords" content="{% block meta_keywords %}{{ request.page_keywords|default:seo_keywords|default:site_keywords }}{% endblock %}">
+{% if seo_canonical_base %}<link rel="canonical" href="{{ seo_canonical_base }}{{ request.path }}">{% endif %}
+<link rel="alternate" type="application/rss+xml" title="RSS 订阅" href="{% url 'article_feed' %}">
+{% if seo_og_image %}<meta property="og:image" content="{{ seo_canonical_base }}{{ seo_og_image }}">{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{% block og_title %}{{ request.page_title|default:"首页" }}{% endblock %} - {{ site_name }}">
+<meta property="og:description" content="{% block og_description %}{{ request.page_description|default:seo_description|default:site_description|default:site_name }}{% endblock %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{% block twitter_title %}{{ request.page_title|default:"首页" }}{% endblock %} - {{ site_name }}">
+<meta name="twitter:description" content="{% block twitter_description %}{{ request.page_description|default:seo_description|default:site_description|default:site_name }}{% endblock %}">
+<link rel="icon" type="image/svg+xml" href="{% static 'app-logo.svg' %}">
+<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+<link rel="apple-touch-icon" href="{% static 'app-logo.svg' %}">
+<link rel="stylesheet" href="{% static 'theme.css' %}">
+{% if theme_css %}<link rel="stylesheet" href="{% static theme_css %}">{% endif %}
+{% if dark_mode == '1' %}<link rel="stylesheet" href="{% static 'themes/dark/style.css' %}">{% elif dark_mode == '0' %}<link rel="stylesheet" href="{% static 'themes/dark/style.css' %}" media="(prefers-color-scheme: dark)">{% endif %}
+<script src="{% static 'app.js' %}" defer></script>
+{% if custom_css %}<style id="custom-css">{{ custom_css }}</style>{% endif %}
+{% block head_extra %}{% endblock %}
+{% if seo_canonical_base %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"{{ site_name|escapejs }}","url":"{{ seo_canonical_base|escapejs }}","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"{{ seo_canonical_base|escapejs }}/search/?q={search_term}"},"query-input":"required name=search_term"}}</script>{% endif %}
+{% for h in head_hooks %}{{ h|safe }}{% endfor %}
+</head>
+<body class="{% if aero_enabled %}aero{% endif %}">
+{% for h in body_top_hooks %}{{ h|safe }}{% endfor %}
+<header class="app-bar">
+<a href="{% url 'home' %}" class="brand"><img src="{% static 'app-logo.svg' %}" alt="">{{ site_name }}</a>
+<nav class="nav-pills">
+<a href="{% url 'home' %}"><img src="{% static 'icons/home.svg' %}" alt="" class="nav-icon">首页</a>
+<a href="{% url 'bbs_index' %}"><img src="{% static 'icons/forum.svg' %}" alt="" class="nav-icon">论坛</a>
+<a href="{% url 'code_index' %}"><img src="{% static 'icons/code.svg' %}" alt="" class="nav-icon">代码</a>
+<a href="{% url 'articles_index' %}"><img src="{% static 'icons/article.svg' %}" alt="" class="nav-icon">文章</a>
+<a href="{% url 'search' %}"><img src="{% static 'icons/search.svg' %}" alt="" class="nav-icon">搜索</a>
+<a href="{% url 'help' %}"><img src="{% static 'icons/help.svg' %}" alt="" class="nav-icon">帮助</a>
+<a href="{% url 'faq' %}"><img src="{% static 'icons/help.svg' %}" alt="" class="nav-icon">FAQ</a>
+<a href="{% url 'about' %}"><img src="{% static 'icons/cms.svg' %}" alt="" class="nav-icon">关于</a>
+{% for p in nav_pages %}<a href="{% url 'page_detail' p.slug %}">{{ p.title }}</a>{% endfor %}
+<a href="{% url 'games' %}"><img src="{% static 'icons/games.svg' %}" alt="" class="nav-icon">游戏</a>
+{% if user.is_authenticated %}
+<span class="user-tag">{{ user.username }}</span>
+<a href="{% url 'profile' %}"><img src="{% static 'icons/user.svg' %}" alt="" class="nav-icon">用户中心</a>
+{% if user.role == 'admin' %}<a href="{% url 'admin_panel' %}"><img src="{% static 'icons/admin.svg' %}" alt="" class="nav-icon">管理</a>{% endif %}
+<a href="{% url 'logout' %}"><img src="{% static 'icons/logout.svg' %}" alt="" class="nav-icon">退出</a>
+{% else %}
+<a href="{% url 'login' %}"><img src="{% static 'icons/login.svg' %}" alt="" class="nav-icon">登录</a>
+<a href="{% url 'register' %}"><img src="{% static 'icons/register.svg' %}" alt="" class="nav-icon">注册</a>
+{% endif %}
+</nav>
+</header>
+<main class="main">
+{% if messages %}
+{% for m in messages %}
+<div class="alert alert-{% if m.tags == 'error' %}error{% else %}ok{% endif %}">{{ m }}</div>
+{% endfor %}
+{% endif %}
+{% block content %}{% endblock %}
+</main>
+<footer class="app-footer">
+{% for h in footer_hooks %}{{ h|safe }}{% endfor %}
+<form method="post" action="{% url 'newsletter_subscribe' %}">{% csrf_token %}<input type="email" name="email" placeholder="订阅邮件" required><button type="submit" class="btn">订阅</button></form>
+<div class="footer-links">{% for l in footer_links %}<a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.title }}</a> · {% endfor %}&copy; {% now "Y" %} {{ site_name }} <span class="version-tag">v{{ cms_version|default:"-" }}</span></div>
+</footer>
+{% for h in body_bottom_hooks %}{{ h|safe }}{% endfor %}
+</body>
+</html>

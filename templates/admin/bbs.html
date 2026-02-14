@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}帖子管理{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">帖子管理</div>
+<div class="card-body">
+<div class="admin-table-wrap">
+<div class="admin-row bbs head"><span>ID</span><span>标题</span><span>作者</span><span>审核</span><span>时间</span></div>
+{% for i in items %}
+<div class="admin-row bbs"><span>{{ i.id }}</span><span><a href="{% url 'bbs_detail' i.pk %}">{{ i.title }}</a></span><span>{{ i.user.username|default:"匿名" }}</span><span>{% if i.approved %}已通过{% else %}<form method="post" action="{% url 'admin_bbs_approve' i.pk %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn" style="padding:0.5rem;font-size:0.8rem;">通过</button></form>{% endif %}</span><span>{{ i.created_at|date:"Y-m-d H:i" }}</span></div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

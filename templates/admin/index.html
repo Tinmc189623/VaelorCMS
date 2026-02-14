@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}管理后台{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">管理后台</div>
+<div class="card-body">
+<div class="bento">
+<a href="{% url 'admin_users' %}" class="tile"><strong>用户管理</strong><span>{{ stats.users }} 用户</span></a>
+<a href="{% url 'admin_bbs' %}" class="tile"><strong>帖子管理</strong><span>{{ stats.bbs }} 帖子</span></a>
+<a href="{% url 'admin_code' %}" class="tile"><strong>代码管理</strong><span>{{ stats.code }} 代码</span></a>
+<a href="{% url 'admin:articles_article_changelist' %}" class="tile"><strong>文章管理</strong><span>{{ stats.articles }} 文章</span></a>
+<a href="{% url 'admin:site_app_page_changelist' %}" class="tile"><strong>自定义页面</strong><span>创建 /p/slug/ 页面</span></a>
+<a href="{% url 'admin_logs' %}" class="tile"><strong>操作日志</strong><span>查看日志</span></a>
+<a href="{% url 'admin_security' %}" class="tile"><strong>安全审计</strong><span>Thalix 安全检查</span></a>
+<a href="{% url 'admin_settings' %}" class="tile"><strong>站点设置</strong><span>站点、安全、用户、内容、维护</span></a>
+<a href="{% url 'admin_rescue' %}" class="tile"><strong>站点急救</strong><span>清除缓存、恢复配置、修复文件</span></a>
+</div>
+</div>
+</div>
+{% endblock %}

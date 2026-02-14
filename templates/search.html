@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}搜索{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">搜索</div>
+<div class="card-body">
+<form method="get" action="{% url 'search' %}" style="margin-bottom:1.5rem;">
+<input type="text" name="q" value="{{ q }}" placeholder="输入关键词" style="max-width:400px;">
+<button type="submit" class="btn">搜索</button>
+</form>
+{% if q %}
+{% if results.bbs %}
+<h3>论坛</h3>
+<div class="list-wrap">
+{% for p in results.bbs %}
+<a href="{% url 'bbs_detail' p.pk %}" class="list-item"><span class="title">{{ p.title }}</span><span class="meta">{{ p.created_at|date:"Y-m-d" }}</span></a>
+{% endfor %}
+</div>
+{% endif %}
+{% if results.code %}
+<h3>代码</h3>
+<div class="list-wrap">
+{% for s in results.code %}
+<a href="{% url 'code_detail' s.pk %}" class="list-item"><span class="title">{{ s.title }}</span><span class="meta">{{ s.language }} · {{ s.created_at|date:"Y-m-d" }}</span></a>
+{% endfor %}
+</div>
+{% endif %}
+{% if results.articles %}
+<h3>文章</h3>
+<div class="list-wrap">
+{% for a in results.articles %}
+<a href="{% url 'article_detail' a.pk %}" class="list-item"><span class="title">{{ a.title }}</span><span class="meta">{{ a.created_at|date:"Y-m-d" }}</span></a>
+{% endfor %}
+</div>
+{% endif %}
+{% if not results.bbs and not results.code and not results.articles %}<p class="search-empty">未找到与「{{ q }}」相关的结果，试试其他关键词。</p>{% endif %}
+{% endif %}
+</div>
+</div>
+{% endblock %}

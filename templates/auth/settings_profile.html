@@ -1,0 +1,22 @@
+{% extends 'auth/settings_base.html' %}
+{% block title %}资料 - 设置{% endblock %}
+{% block settings_content %}
+<h3 style="margin-top:0;">个人资料</h3>
+<form method="post" action="{% url 'settings_profile' %}" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="input-group"><label>邮箱</label>{{ form.email }}</div>
+<div class="input-group"><label>昵称</label>{{ form.nickname }}</div>
+<div class="input-group"><label>简介</label>{{ form.bio }}</div>
+<div class="input-group"><label>头像</label>{{ form.avatar }}</div>
+<h4 style="margin-top:1.5rem;">隐私</h4>
+<div class="input-group"><label>{{ form.show_email }} 公开邮箱</label></div>
+<div class="input-group"><label>资料可见性</label>{{ form.profile_visible }}</div>
+<h4 style="margin-top:1.5rem;">通知</h4>
+<div class="input-group"><label>{{ form.email_on_reply }} 回复时邮件通知</label></div>
+<div class="input-group"><label>{{ form.email_on_mention }} 被@时邮件通知</label></div>
+<h4 style="margin-top:1.5rem;">偏好</h4>
+<div class="input-group"><label>时区</label>{{ form.timezone }}</div>
+<div class="input-group"><label>语言</label>{{ form.language }}</div>
+<button type="submit" class="btn" style="margin-top:1rem;">保存</button>
+</form>
+{% endblock %}

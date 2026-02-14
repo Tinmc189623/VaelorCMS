@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}文章{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">文章列表</div>
+<div class="card-body">
+{% if user.is_authenticated %}<p style="margin-bottom:1rem;"><a href="{% url 'article_create' %}" class="btn">发布文章</a></p>{% endif %}
+{% if categories %}<p class="category-filter">分类：<a href="{% url 'articles_index' %}{% if current_tag %}?tag={{ current_tag|urlencode }}{% endif %}" class="{% if not current_category %}active{% endif %}">全部</a>{% for c in categories %} · <a href="{% url 'articles_index' %}?category={{ c|urlencode }}{% if current_tag %}&tag={{ current_tag|urlencode }}{% endif %}" class="{% if current_category == c %}active{% endif %}">{{ c }}</a>{% endfor %}</p>{% endif %}
+{% if tag_cloud %}<p class="tag-cloud" style="margin-bottom:1rem;font-size:0.9rem;">标签：{% for t, cnt in tag_cloud %}<a href="{% url 'articles_index' %}?tag={{ t|urlencode }}{% if current_category %}&category={{ current_category|urlencode }}{% endif %}" class="{% if current_tag == t %}active{% endif %}">{{ t }}({{ cnt }})</a>{% if not forloop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+{% if archives %}<p style="margin-bottom:1rem;font-size:0.9rem;">归档：<a href="{% url 'articles_index' %}{% if current_category %}?category={{ current_category|urlencode }}{% endif %}{% if current_tag %}{% if current_category %}&{% else %}?{% endif %}tag={{ current_tag|urlencode }}{% endif %}" class="{% if not current_month %}active{% endif %}">全部</a>{% for m, label in archives %} · <a href="{% url 'articles_index' %}?month={{ m }}{% if current_category %}&category={{ current_category|urlencode }}{% endif %}{% if current_tag %}&tag={{ current_tag|urlencode }}{% endif %}" class="{% if current_month == m %}active{% endif %}">{{ label }}</a>{% endfor %}</p>{% endif %}
+<div class="list-wrap">
+{% for a in articles %}
+<a href="{% url 'article_detail' a.pk %}" class="list-item">
+<span class="title">{{ a.title }}</span>
+<span class="meta">{% if a.is_pinned %}<span style="color:var(--accent);">置顶</span> · {% endif %}{{ a.get_status_display }} · {{ a.category }} · {{ a.view_count }} 阅读{% if a.like_count %} · {{ a.like_count }} 点赞{% endif %} · {{ a.created_at|date:"Y-m-d H:i" }}</span>
+</a>
+{% empty %}
+<p style="padding:1.5rem;color:var(--fg-muted);">暂无文章</p>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

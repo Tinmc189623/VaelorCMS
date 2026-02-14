@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}常见问题{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">常见问题（FAQ）</div>
+<div class="card-body">
+<p style="color:var(--fg-muted);margin-bottom:1.5rem;">使用过程中遇到问题？先看看下面有没有答案。</p>
+
+<section class="faq-section">
+<h3>账号与登录</h3>
+<dl class="faq-list">
+<dt>如何注册账号？</dt>
+<dd>点击顶栏「注册」，填写用户名、密码（需再确认一次）、邮箱（可选）后提交。若看不到注册入口，说明站长已关闭注册，需联系管理员开通账号。</dd>
+
+<dt>忘记密码怎么办？</dt>
+<dd>目前需联系管理员重置密码。重置后请使用新密码重新登录。</dd>
+
+<dt>登录失败次数过多被锁定？</dt>
+<dd>连续输错密码达到上限后，该 IP 会被临时锁定（默认 15 分钟）。请稍后再试，或联系管理员。</dd>
+
+<dt>如何修改密码？</dt>
+<dd>登录后进入「用户中心」→「设置」→「修改密码」，输入旧密码和新密码即可。</dd>
+</dl>
+</section>
+
+<section class="faq-section">
+<h3>发帖与内容</h3>
+<dl class="faq-list">
+<dt>如何发帖？</dt>
+<dd>登录后进入「论坛」，填写标题和内容后提交。帖子内容上限约 50000 字，具体以站点配置为准。</dd>
+
+<dt>如何提交代码？</dt>
+<dd>登录后进入「代码」→ 填写标题、选择语言、粘贴代码后提交。他人可查看带语法高亮的代码。</dd>
+
+<dt>如何发布文章？</dt>
+<dd>登录后进入「文章」→「发布文章」，填写标题和内容，选择「草稿」或「已发布」。草稿仅自己可见。</dd>
+
+<dt>文章 RSS 订阅地址？</dt>
+<dd>访问 <code>/articles/feed/</code> 可获取 RSS 2.0 订阅，或通过站点头部的 RSS 链接添加。</dd>
+</dl>
+</section>
+
+<section class="faq-section">
+<h3>个人设置</h3>
+<dl class="faq-list">
+<dt>如何修改个人资料？</dt>
+<dd>登录后进入「用户中心」→「设置」，可修改昵称、简介、头像、隐私、通知偏好等。</dd>
+
+<dt>如何登出其他设备？</dt>
+<dd>在「用户中心」→「设置」→「账户与安全」中，可一键登出除当前设备外的所有会话。</dd>
+</dl>
+</section>
+
+<section class="faq-section">
+<h3>安全与限制</h3>
+<dl class="faq-list">
+<dt>密码有什么要求？</dt>
+<dd>由站长配置，通常包括最小长度（默认 8 位）、是否需字母+数字、是否需特殊字符等。</dd>
+
+<dt>API 有调用限制吗？</dt>
+<dd>有。公开 API 按 IP 限流，默认每分钟 60 次，超限返回 429。健康检查接口不限流。</dd>
+
+<dt>站点维护时能访问吗？</dt>
+<dd>维护模式下普通用户无法访问，管理员可正常进入。维护结束后会自动恢复。</dd>
+</dl>
+</section>
+
+<section class="faq-section">
+<h3>管理员相关</h3>
+<dl class="faq-list">
+<dt>如何进入管理后台？</dt>
+<dd>使用管理员账号登录后，顶栏会出现「管理」入口，点击即可进入。</dd>
+
+<dt>站点设置在哪里？</dt>
+<dd>管理后台 →「站点设置」，可配置站点名称、安全策略、注册开关、主题、SEO、维护模式等。</dd>
+
+<dt>如何关闭注册？</dt>
+<dd>管理后台 → 站点设置 → 用户 → 将「开放注册」设为「否」。</dd>
+</dl>
+</section>
+
+<p style="margin-top:2rem;font-size:0.9375rem;color:var(--fg-muted);">更多说明请查看 <a href="{% url 'help' %}">帮助</a> 或 <a href="{% url 'about' %}">关于</a> 页面。完整 FAQ 文档见项目 <code>docs/FAQ.md</code>。</p>
+</div>
+</div>
+{% endblock %}

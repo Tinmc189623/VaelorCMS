@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{% if article %}编辑{% else %}发布{% endif %}文章{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">{% if article %}编辑文章{% else %}发布文章{% endif %}</div>
+<div class="card-body">
+<form method="post" action="{% url 'article_save' %}">
+{% csrf_token %}
+{% if article %}<input type="hidden" name="id" value="{{ article.pk }}">{% endif %}
+<div class="input-group"><label>标题</label><input type="text" name="title" value="{{ article.title|default:'' }}" required></div>
+<div class="input-group"><label>内容</label><textarea name="content" rows="12" required>{{ article.content|default:'' }}</textarea></div>
+<div class="input-group"><label>状态</label><select name="status"><option value="draft" {% if article.status == 'draft' %}selected{% endif %}>草稿</option><option value="published" {% if article.status == 'published' %}selected{% endif %}>已发布</option></select></div>
+<div class="input-group"><label>置顶</label><input type="checkbox" name="is_pinned" value="1" {% if article and article.is_pinned %}checked{% endif %}></div>
+<div class="input-group"><label>分类</label><input type="text" name="category" value="{{ article.category|default:'' }}"></div>
+<div class="input-group"><label>标签</label><input type="text" name="tags" value="{{ article.tags|default:'' }}" placeholder="逗号分隔"></div>
+<div class="form-actions">
+<button type="submit" class="btn" name="action" value="save">保存</button>
+<button type="submit" class="btn" name="action" value="publish" style="background:var(--ok);">{% if article and article.status == 'published' %}更新并保持发布{% else %}发布文章{% endif %}</button>
+</div>
+</form>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}站点急救{% endblock %}
+{% block content %}
+<div class="card" style="max-width:800px;">
+<div class="card-title">站点急救</div>
+<div class="card-body">
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1.5rem;">当站点异常时，可执行以下急救操作。请谨慎使用。</p>
+{% if messages %}
+{% for m in messages %}
+<div class="alert alert-{% if m.tags == 'error' %}error{% else %}ok{% endif %}">{{ m }}</div>
+{% endfor %}
+{% endif %}
+<div style="display:flex;flex-direction:column;gap:1rem;">
+<div class="card" style="margin:0;">
+<div class="card-body" style="padding:1rem;">
+<h4 style="margin:0 0 0.5rem 0;">清除缓存</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin:0 0 0.75rem 0;">清除站点设置、文章标签云等缓存，解决配置不生效问题。</p>
+<form method="post" action="{% url 'admin_rescue' %}" style="display:inline;">{% csrf_token %}<input type="hidden" name="action" value="clear_cache"><button type="submit" class="btn">执行</button></form>
+</div>
+</div>
+<div class="card" style="margin:0;">
+<div class="card-body" style="padding:1rem;">
+<h4 style="margin:0 0 0.5rem 0;">清除登录锁定</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin:0 0 0.75rem 0;">清除所有 IP 的登录失败锁定，适用于管理员误锁后恢复。</p>
+<form method="post" action="{% url 'admin_rescue' %}" style="display:inline;">{% csrf_token %}<input type="hidden" name="action" value="clear_login_lockout"><button type="submit" class="btn">执行</button></form>
+</div>
+</div>
+<div class="card" style="margin:0;">
+<div class="card-body" style="padding:1rem;">
+<h4 style="margin:0 0 0.5rem 0;">关闭维护模式</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin:0 0 0.75rem 0;">若误开维护模式导致无法访问，可在此强制关闭。</p>
+<form method="post" action="{% url 'admin_rescue' %}" style="display:inline;">{% csrf_token %}<input type="hidden" name="action" value="disable_maintenance"><button type="submit" class="btn">执行</button></form>
+</div>
+</div>
+<div class="card" style="margin:0;">
+<div class="card-body" style="padding:1rem;">
+<h4 style="margin:0 0 0.5rem 0;">恢复全部配置为默认</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin:0 0 0.75rem 0;">将所有站点设置恢复为出厂默认值，慎用。</p>
+<form method="post" action="{% url 'admin_rescue' %}" style="display:inline;">{% csrf_token %}<input type="hidden" name="action" value="restore_all"><button type="submit" class="btn" style="background:var(--fg-muted);" onclick="return confirm('确定恢复全部配置？此操作不可撤销。');">执行</button></form>
+</div>
+</div>
+<div class="card" style="margin:0;">
+<div class="card-body" style="padding:1rem;">
+<h4 style="margin:0 0 0.5rem 0;">修复 config.ini</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin:0 0 0.75rem 0;">若 config.ini 损坏或丢失，可从 config.ini.sample 恢复基础结构（需重启生效）。</p>
+<form method="post" action="{% url 'admin_rescue' %}" style="display:inline;">{% csrf_token %}<input type="hidden" name="action" value="fix_config_ini"><button type="submit" class="btn" onclick="return confirm('将从 sample 复制生成 config.ini，覆盖现有文件。确定？');">执行</button></form>
+</div>
+</div>
+<div class="card" style="margin:0;">
+<div class="card-body" style="padding:1rem;">
+<h4 style="margin:0 0 0.5rem 0;">配置备份与恢复</h4>
+<p style="font-size:0.875rem;color:var(--fg-muted);margin:0 0 0.75rem 0;">导出当前站点设置为 JSON，或从备份文件恢复。</p>
+<form method="post" action="{% url 'admin_rescue' %}" style="display:inline;">{% csrf_token %}<input type="hidden" name="action" value="export_backup"><button type="submit" class="btn">导出备份</button></form>
+<form method="post" action="{% url 'admin_rescue' %}" enctype="multipart/form-data" style="display:inline;margin-left:0.5rem;">
+{% csrf_token %}<input type="hidden" name="action" value="import_backup"><input type="file" name="backup_file" accept=".json" required style="margin-right:0.5rem;"><button type="submit" class="btn">从文件恢复</button>
+</form>
+</div>
+</div>
+</div>
+<p style="margin-top:1.5rem;font-size:0.8125rem;color:var(--fg-muted);"><a href="{% url 'admin_panel' %}">← 返回管理后台</a></p>
+</div>
+</div>
+{% endblock %}

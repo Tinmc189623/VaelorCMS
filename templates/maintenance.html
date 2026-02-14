@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}维护中{% endblock %}
+{% block content %}
+<div class="card" style="max-width:500px;margin:4rem auto;text-align:center;">
+<div class="card-title">维护中</div>
+<div class="card-body">
+<p>{{ message|default:"站点维护中，请稍后再试。" }}</p>
+</div>
+</div>
+{% endblock %}

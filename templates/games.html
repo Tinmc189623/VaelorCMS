@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if game %}小游戏{% else %}小游戏{% endif %}{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">小游戏</div>
+<div class="card-body">
+{% if not game %}
+<div class="bento">
+<a href="{% url 'games' %}?g=snake" class="tile"><strong>贪吃蛇</strong><span>方向键控制</span></a>
+<a href="{% url 'games' %}?g=memory" class="tile"><strong>记忆翻牌</strong><span>翻牌配对</span></a>
+<a href="{% url 'games' %}?g=guess" class="tile"><strong>猜数字</strong><span>1-100 猜数</span></a>
+</div>
+{% elif game == 'snake' %}
+<p><a href="{% url 'games' %}" class="back-link"><img src="{% static 'icons/arrow-left.svg' %}" alt="" class="icon-inline"> 返回</a></p>
+<div id="snake-canvas" style="width:400px;max-width:100%;height:400px;background:#1a1a1a;border-radius:var(--radius);margin:1rem 0;"></div>
+<p style="color:var(--fg-muted);font-size:0.875rem;">方向键控制 · 空格暂停</p>
+<script>
+(function(){const c=document.createElement('canvas');c.width=400;c.height=400;document.getElementById('snake-canvas').appendChild(c);
+const ctx=c.getContext('2d'),W=20,s=[{x:5,y:5}],d={x:1,y:0},f={x:10,y:10};let sc=0,pause=0,rnd=()=>Math.floor(Math.random()*20);
+const draw=()=>{ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,400,400);ctx.fillStyle='#8b5a2b';s.forEach(p=>ctx.fillRect(p.x*W,p.y*W,W-1,W-1));
+ctx.fillStyle='#f59e0b';ctx.fillRect(f.x*W,f.y*W,W-1,W-1);ctx.fillStyle='#fff';ctx.font='14px sans-serif';ctx.fillText('得分:'+sc,5,15);if(pause)ctx.fillText('暂停',180,200);};
+const tick=()=>{if(pause)return;const h=s[0],nx=(h.x+d.x+20)%20,ny=(h.y+d.y+20)%20;
+if(s.some(p=>p.x===nx&&p.y===ny)){clearInterval(iv);ctx.fillStyle='#f59e0b';ctx.font='24px sans-serif';ctx.fillText('游戏结束 '+sc,120,200);return;}
+s.unshift({x:nx,y:ny});if(nx===f.x&&ny===f.y){sc++;do f={x:rnd(),y:rnd()} while(s.some(p=>p.x===f.x&&p.y===f.y));}else s.pop();draw();};
+const iv=setInterval(tick,120);document.addEventListener('keydown',e=>{if(e.keyCode===32){pause=1-pause;return;}
+const m={37:{x:-1,y:0},38:{x:0,y:-1},39:{x:1,y:0},40:{x:0,y:1}};if(m[e.keyCode]&&(m[e.keyCode].x!==-d.x||m[e.keyCode].y!==-d.y)){d=m[e.keyCode];e.preventDefault();}});draw();})();
+</script>
+{% elif game == 'memory' %}
+<p><a href="{% url 'games' %}" class="back-link"><img src="{% static 'icons/arrow-left.svg' %}" alt="" class="icon-inline"> 返回</a></p>
+<div id="mem" style="display:flex;flex-wrap:wrap;gap:8px;max-width:360px;margin:1rem 0;"></div>
+<script>
+(function(){const sym=['A','B','C','D','E','F','G','H'],cards=[...sym,...sym];
+for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+let op=[],mt=0,hid='#ddd8d0';cards.forEach(v=>{const d=document.createElement('div');d.style.cssText='width:70px;height:70px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;border-radius:8px;cursor:pointer;background:'+hid+';color:'+hid;d.textContent=v;d.dataset.v=v;
+d.onclick=()=>{if(op.length>=2||d.style.background!==hid)return;d.style.background='#fff';d.style.color='#2a2520';op.push(d);
+if(op.length===2){if(op[0].dataset.v===op[1].dataset.v){mt+=2;op=[];if(mt===16)setTimeout(()=>{alert('通关');location.reload()},300);}else setTimeout(()=>{op.forEach(x=>{x.style.background=x.style.color=hid});op=[]},500);}};document.getElementById('mem').appendChild(d);});})();
+</script>
+{% elif game == 'guess' %}
+<p><a href="{% url 'games' %}" class="back-link"><img src="{% static 'icons/arrow-left.svg' %}" alt="" class="icon-inline"> 返回</a></p>
+<div style="margin:1rem 0;"><p>猜 1-100 的数字：</p>
+<input type="number" id="gi" min="1" max="100" value="50" style="width:80px;margin-right:0.5rem;">
+<button type="button" class="btn" id="gb">猜</button>
+<p id="gh" style="margin-top:1rem;font-weight:600;"></p></div>
+<script>const sec=Math.floor(Math.random()*100)+1;let n=0;document.getElementById('gb').onclick=()=>{const v=parseInt(document.getElementById('gi').value,10),h=document.getElementById('gh');
+if(isNaN(v)||v<1||v>100){h.textContent='请输入 1-100';h.style.color='var(--danger)';return;}n++;
+if(v===sec){h.textContent='正确！用了 '+n+' 次';h.style.color='var(--ok)';return;}h.textContent=(v>sec?'大了':'小了')+' (第 '+n+' 次)';h.style.color='var(--danger)';};</script>
+{% endif %}
+</div>
+</div>
+{% endblock %}

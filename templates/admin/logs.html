@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}操作日志{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">操作日志</div>
+<div class="card-body">
+<div class="admin-table-wrap">
+<div class="admin-row logs head"><span>ID</span><span>操作人</span><span>操作</span><span>目标</span><span>时间</span></div>
+{% for l in logs %}
+<div class="admin-row logs"><span>{{ l.id }}</span><span>{{ l.username }}</span><span>{{ l.action }}</span><span>{{ l.target }} #{{ l.target_id }}</span><span>{{ l.created_at|date:"Y-m-d H:i" }}</span></div>
+{% empty %}
+<p style="padding:1.5rem;color:var(--fg-muted);">暂无日志</p>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

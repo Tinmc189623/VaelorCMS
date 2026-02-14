@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}代码管理{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">代码管理</div>
+<div class="card-body">
+<div class="admin-table-wrap">
+<div class="admin-row code head"><span>ID</span><span>标题</span><span>作者</span><span>时间</span></div>
+{% for i in items %}
+<div class="admin-row code"><span>{{ i.id }}</span><span><a href="{% url 'code_detail' i.pk %}">{{ i.title }}</a></span><span>{{ i.user.username|default:"-" }}</span><span>{{ i.created_at|date:"Y-m-d H:i" }}</span></div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}用户中心{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">用户中心 · <a href="{% url 'settings_profile' %}">设置</a></div>
+<div class="card-body">
+<p>用户名：{{ user.username }} · 邮箱：{{ user.email|default:"未设置" }}</p>
+<h4 style="margin-top:1.5rem;">我的帖子</h4>
+<div style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
+{% for p in posts %}
+<a href="{% url 'bbs_detail' p.pk %}" class="list-item"><span class="title">{{ p.title }}</span><span class="meta">{{ p.created_at|date:"Y-m-d" }}</span></a>
+{% empty %}
+<p style="padding:1rem;color:var(--fg-muted);">暂无帖子</p>
+{% endfor %}
+</div>
+<h4 style="margin-top:1.5rem;">我的代码</h4>
+<div style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
+{% for s in snippets %}
+<a href="{% url 'code_detail' s.pk %}" class="list-item"><span class="title">{{ s.title }}</span><span class="meta">{{ s.language }} · {{ s.created_at|date:"Y-m-d" }}</span></a>
+{% empty %}
+<p style="padding:1rem;color:var(--fg-muted);">暂无代码</p>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

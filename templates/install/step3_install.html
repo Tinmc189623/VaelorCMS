@@ -1,0 +1,24 @@
+{% extends 'install/base_install.html' %}
+{% block title %}执行安装{% endblock %}
+{% block content %}
+{% if errors %}
+<p class="alert-error">安装过程中出现错误：</p>
+<ul>
+{% for e in errors %}
+<li>{{ e }}</li>
+{% endfor %}
+</ul>
+<p><a href="{% url 'install_step3' %}" class="btn">重试</a></p>
+{% else %}
+<p>点击下方按钮开始安装{% if use_mysql %}（将使用 MySQL）{% else %}（将使用 SQLite，无需重启）{% endif %}。</p>
+<form method="post" id="install-form">
+<button type="submit" class="btn" id="install-btn">开始安装</button>
+</form>
+<script>
+document.getElementById('install-form').onsubmit = function() {
+  document.getElementById('install-btn').disabled = true;
+  document.getElementById('install-btn').textContent = '安装中，请稍候...';
+};
+</script>
+{% endif %}
+{% endblock %}

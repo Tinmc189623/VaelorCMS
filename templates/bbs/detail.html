@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">{{ post.title }}</div>
+<div class="card-body">
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1rem;">{{ post.user.username|default:"匿名" }} · {{ post.created_at|date:"Y-m-d H:i" }}</p>
+<div style="white-space:pre-wrap;">{{ post.content|linebreaks }}</div>
+<p style="margin-top:1.5rem;"><a href="{% url 'bbs_index' %}" class="back-link"><img src="{% static 'icons/arrow-left.svg' %}" alt="" class="icon-inline"> 返回列表</a></p>
+</div>
+</div>
+{% endblock %}

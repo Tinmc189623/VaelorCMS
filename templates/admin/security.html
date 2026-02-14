@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}安全审计{% endblock %}
+{% block content %}
+<div class="card">
+<div class="card-title">Thalix 安全审计</div>
+<div class="card-body">
+<p style="font-size:0.875rem;color:var(--fg-muted);margin-bottom:1rem;">对站点配置与运行环境进行安全检查，发现问题请及时修复。</p>
+<div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+<span style="padding:0.35rem 0.75rem;background:var(--ok);color:white;border-radius:var(--radius-sm);">通过 {{ summary.passed }}/{{ summary.total }}</span>
+{% if summary.warnings %}<span style="padding:0.35rem 0.75rem;background:#b45309;color:white;border-radius:var(--radius-sm);">警告 {{ summary.warnings }}</span>{% endif %}
+{% if summary.critical %}<span style="padding:0.35rem 0.75rem;background:var(--danger);color:white;border-radius:var(--radius-sm);">严重 {{ summary.critical }}</span>{% endif %}
+</div>
+<table style="width:100%;border-collapse:collapse;">
+<thead><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:0.5rem;">检查项</th><th style="text-align:left;padding:0.5rem;">状态</th><th style="text-align:left;padding:0.5rem;">说明</th></tr></thead>
+<tbody>
+{% for r in results %}
+<tr style="border-bottom:1px solid var(--border);">
+<td style="padding:0.5rem;">{{ r.name }}</td>
+<td style="padding:0.5rem;">{% if r.passed %}<span style="color:var(--ok);">✓ 通过</span>{% else %}<span style="color:{% if r.severity == 'critical' %}var(--danger){% else %}#b45309{% endif %};">✗ 未通过</span>{% endif %}</td>
+<td style="padding:0.5rem;font-size:0.875rem;color:var(--fg-muted);">{{ r.message }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}
