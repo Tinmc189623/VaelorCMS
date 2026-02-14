@@ -1,0 +1,22 @@
+/* 深色主题示例 */
+:root {
+  --fg: #e8e6e3;
+  --fg-muted: #a8a29e;
+  --bg: #1c1917;
+  --bg-card: #292524;
+  --border: #44403c;
+  --accent: #d6d3d1;
+  --accent-hover: #fafaf9;
+  --aero-bg: rgba(41, 37, 36, 0.9);
+  --aero-border: rgba(68, 64, 60, 0.6);
+}
+body {
+  background: linear-gradient(135deg, #1c1917 0%, #292524 50%, #1f1d1b 100%);
+}
+.alert-error { background: rgba(127, 29, 29, 0.9); border-color: rgba(185, 28, 28, 0.6); }
+.alert-ok { background: rgba(20, 83, 45, 0.9); border-color: rgba(22, 163, 74, 0.6); }
+input, select, textarea {
+  background: rgba(41, 37, 36, 0.95);
+  border-color: var(--border);
+  color: var(--fg);
+}
