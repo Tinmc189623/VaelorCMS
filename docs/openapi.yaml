@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: VaelorCMS API
+  version: Demo-26.02.13.26
+  description: VaelorCMS API，入口 /api/v1/
+
+paths:
+  /api/v1/stats/:
+    get:
+      summary: 获取统计
+      responses:
+        '200':
+          description: 返回 users、bbs、code 数量
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: integer
+                  bbs:
+                    type: integer
+                  code:
+                    type: integer
+  /api/v1/search/:
+    get:
+      summary: 搜索
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 返回 bbs、code 匹配结果
+  /api/v1/upgrade/:
+    get:
+      summary: 升级检查
+      responses:
+        '200':
+          description: 返回当前版本
+  /api/v1/health/:
+    get:
+      summary: 健康检查
+      responses:
+        '200':
+          description: 返回服务状态与数据库连接
